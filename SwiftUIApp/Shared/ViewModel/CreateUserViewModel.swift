@@ -19,7 +19,7 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published private(set) var createdUser: User?
   @Published var successViewModel: SuccessViewModel?
 
-  let createViewModel = PassthroughSubject<Void, Never>()
+  let successState = PassthroughSubject<Void, Never>()
 
   private var cancellables = Set<AnyCancellable>()
 
@@ -39,7 +39,7 @@ class CreateUserViewModel: ObservableObject, Identifiable {
     $createdUser
       .compactMap { $0 }
       .sink { [weak self] _ in
-        self?.createViewModel.send()
+        self?.successState.send()
       }
       .store(in: &cancellables)
   }

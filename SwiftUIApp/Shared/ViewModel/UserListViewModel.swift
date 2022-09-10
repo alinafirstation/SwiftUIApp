@@ -37,7 +37,7 @@ class UserListViewModel: ObservableObject {
   func createUserViewModel() {
     //TODO: Question - Корректно ли здесь использовать dropFirst (если используем PassthroughSubject) ? Если убрать dropFirst - не происходит добавление пользователей, если оставить - кнопка Sign Up срабатывает со второго раза (то же самое в методе createAdminViewModel())
     let viewModel = CreateUserViewModel()
-    viewModel.createViewModel
+    viewModel.successState
       .dropFirst()
       .sink { [weak self] in
         if let user = viewModel.createdUser {
@@ -52,7 +52,7 @@ class UserListViewModel: ObservableObject {
 
   func createAdminViewModel() {
     let viewModel = CreateUserViewModel()
-    viewModel.createViewModel
+    viewModel.successState
       .dropFirst()
       .sink { [weak self] in
         if let user = viewModel.createdUser {
