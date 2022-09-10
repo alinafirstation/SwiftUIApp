@@ -2,9 +2,10 @@
 //  CreateUserViewModel.swift
 //  SwiftUIApp (iOS)
 //
-//  Created by Admin on 09.09.2022.
+//  Created by Admin on 07.09.2022.
 //
 
+import Foundation
 import SwiftUI
 import Combine
 
@@ -18,7 +19,7 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published private(set) var createdUser: User?
   @Published var successViewModel: SuccessViewModel?
 
-  let closeScenario = PassthroughSubject<Void, Never>()
+  let createViewModel = PassthroughSubject<Void, Never>()
 
   private var cancellables = Set<AnyCancellable>()
 
@@ -37,23 +38,9 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   private func bind() {
     $createdUser
       .compactMap { $0 }
-      .map { [weak self] _ in
-        self?.createdSuccessViewModel
-      }
-      .sink { [weak self] in
-        self?.successViewModel = $0
+      .sink { [weak self] _ in
+        self?.createViewModel.send()
       }
       .store(in: &cancellables)
-  }
-
-  private var createdSuccessViewModel: SuccessViewModel {
-    let viewModel = SuccessViewModel()
-    viewModel.onDoneTapped
-      .sink { [weak self] in
-        self?.closeScenario.send()
-      }
-      .store(in: &cancellables)
-
-    return viewModel
   }
 }

@@ -2,7 +2,7 @@
 //  UserListViewModel.swift
 //  SwiftUIApp (iOS)
 //
-//  Created by Admin on 09.09.2022.
+//  Created by Admin on 07.09.2022.
 //
 
 import Foundation
@@ -15,12 +15,15 @@ class UserListViewModel: ObservableObject {
     }
     case createUser(CreateUserViewModel)
     case createAdmin(CreateUserViewModel)
+    case successResponse(SuccessViewModel)
   }
 
   @Published private(set) var users = [User(name: "Alina", surname: "Cherepanova")]
   @Published private(set) var admins = [User(name: "Dima", surname: "Doroshchuk", admin: "Admin")]
   @Published var actionSheetOpen = false
   @Published var route: Route?
+  @Published var successViewModel: SuccessViewModel?
+
   private var cancellables = Set<AnyCancellable>()
 
   func addNewUser(_ user: User) {
@@ -31,31 +34,44 @@ class UserListViewModel: ObservableObject {
     admins.append(user)
   }
 
+  func createUserViewModel() {
+    let viewModel = CreateUserViewModel()
+    viewModel.createViewModel
+      .dropFirst()
+      .sink { [weak self] in
+        if let user = viewModel.createdUser {
+          self?.addNewUser(user)
+        }
+        self?.createSuccessViewModel()
+      }
+      .store(in: &cancellables)
+
+    route = .createUser(viewModel)
+  }
+
   func createAdminViewModel() {
     let viewModel = CreateUserViewModel()
-    viewModel.closeScenario
+    viewModel.createViewModel
+      .dropFirst()
       .sink { [weak self] in
         if let user = viewModel.createdUser {
           self?.addNewAdmin(user)
         }
-        self?.route = nil
+        self?.createSuccessViewModel()
       }
       .store(in: &cancellables)
 
     route = .createAdmin(viewModel)
   }
 
-  func createUserViewModel() {
-    let viewModel = CreateUserViewModel()
-    viewModel.closeScenario
+  func createSuccessViewModel() {
+    let viewModel = SuccessViewModel()
+    viewModel.onDoneTapped
       .sink { [weak self] in
-        if let user = viewModel.createdUser {
-          self?.addNewUser(user)
-        }
         self?.route = nil
       }
       .store(in: &cancellables)
 
-    route = .createUser(viewModel)
+    route = .successResponse(viewModel)
   }
 }

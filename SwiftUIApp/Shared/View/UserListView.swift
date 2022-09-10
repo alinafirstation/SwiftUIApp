@@ -33,6 +33,13 @@ struct UserListView: View {
       .background(
         navigation
       )
+      .background(
+        NavigationLink("", isActive: .init(get: { viewModel.successViewModel != nil }, set: { _ in viewModel.successViewModel = nil }), destination: {
+          if let viewModel = viewModel.successViewModel {
+            SuccessView(viewModel: viewModel)
+          }
+        })
+      )
       .navigationTitle("Common list")
     }
     .navigationViewStyle(StackNavigationViewStyle())
@@ -45,6 +52,7 @@ struct UserListView: View {
           switch route {
           case let .createUser(viewModel): CreateUserView(viewModel: viewModel)
           case let .createAdmin(viewModel): CreateAdminView(viewModel: viewModel)
+          case let .successResponse(viewModel): SuccessView(viewModel: viewModel)
           }
         }
       }

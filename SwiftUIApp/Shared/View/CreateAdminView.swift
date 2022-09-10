@@ -17,13 +17,6 @@ struct CreateAdminView: View {
       }
       CommonFormSection(viewModel: viewModel)
     }
-    .background(
-      NavigationLink("", isActive: .init(get: { viewModel.successViewModel != nil }, set: { _ in viewModel.successViewModel = nil })) {
-        if let viewModel = viewModel.successViewModel {
-          SuccessView(viewModel: viewModel)
-        }
-      }
-    )
     .padding()
     .navigationTitle("Admin's registration")
   }
