@@ -17,9 +17,6 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published var adminRole = ""
 
   @Published private(set) var createdUser: User?
-  @Published var successViewModel: SuccessViewModel?
-
-  private var cancellables = Set<AnyCancellable>()
 
   var isValid: Bool {
     !name.isEmpty && !surname.isEmpty
