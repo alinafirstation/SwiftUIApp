@@ -53,9 +53,6 @@ struct UserListView: View {
 //            }
 //          })
         }
-//        .onReceive(viewModel.$successViewModel) {
-//          presentation.wrappedValue.dismiss()
-//        }
       }
   }
 

@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class CreateUserViewModel: ObservableObject, Identifiable {
-  var id: Int = 1
+  private(set) var id: Int = 1
 
   @Published var name = ""
   @Published var surname = ""

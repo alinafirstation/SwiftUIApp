@@ -10,7 +10,6 @@ import Combine
 
 class SuccessViewModel: ObservableObject, Identifiable {
   let id = UUID()
-
   let onDoneTapped = PassthroughSubject<Void, Never>()
 
   func close() {
