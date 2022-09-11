@@ -15,7 +15,6 @@ class UserListViewModel: ObservableObject {
     }
     case createUser(CreateUserViewModel)
     case createAdmin(CreateUserViewModel)
-    case successResponse(SuccessViewModel)
   }
 
   @Published private(set) var users = [User(name: "Alina", surname: "Cherepanova")]
@@ -26,53 +25,37 @@ class UserListViewModel: ObservableObject {
 
   private var cancellables = Set<AnyCancellable>()
 
-  func addNewUser(_ user: User) {
-    users.append(user)
-  }
-
-  func addNewAdmin(_ user: User) {
-    admins.append(user)
-  }
-
   func createUserViewModel() {
-    //TODO: Question - Корректно ли здесь использовать dropFirst (если используем PassthroughSubject) ? Если убрать dropFirst - не происходит добавление пользователей, если оставить - кнопка Sign Up срабатывает со второго раза (то же самое в методе createAdminViewModel())
     let viewModel = CreateUserViewModel()
-    viewModel.successState
-      .dropFirst()
-      .sink { [weak self] in
-        if let user = viewModel.createdUser {
-          self?.addNewUser(user)
-        }
-        self?.createSuccessViewModel()
-      }
-      .store(in: &cancellables)
+    viewModel.$createdUser
+      .compactMap { $0 }
+      .sink { [weak self] user in
+        self?.users.append(user)
+        self?.makeSuccessViewModel()
+      }.store(in: &cancellables)
 
     route = .createUser(viewModel)
   }
 
   func createAdminViewModel() {
     let viewModel = CreateUserViewModel()
-    viewModel.successState
-      .dropFirst()
-      .sink { [weak self] in
-        if let user = viewModel.createdUser {
-          self?.addNewAdmin(user)
-        }
-        self?.createSuccessViewModel()
-      }
-      .store(in: &cancellables)
+    viewModel.$createdUser
+      .compactMap { $0 }
+      .sink { [weak self] user in
+        self?.admins.append(user)
+        self?.makeSuccessViewModel()
+      }.store(in: &cancellables)
 
     route = .createAdmin(viewModel)
   }
 
-  func createSuccessViewModel() {
+  private func makeSuccessViewModel() {
     let viewModel = SuccessViewModel()
     viewModel.onDoneTapped
       .sink { [weak self] in
+        self?.successViewModel = viewModel
         self?.route = nil
       }
       .store(in: &cancellables)
-
-    route = .successResponse(viewModel)
   }
 }

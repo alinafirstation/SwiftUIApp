@@ -9,7 +9,8 @@ import SwiftUI
 
 struct UserListView: View {
   @StateObject private var viewModel = UserListViewModel()
-  
+//  @Environment(\.presentationMode) private var presentation
+
   var body: some View {
     NavigationView {
       ScrollView {
@@ -37,7 +38,7 @@ struct UserListView: View {
     }
     .navigationViewStyle(StackNavigationViewStyle())
   }
-  
+
   private var navigation: some View {
     EmptyView()
       .sheet(item: $viewModel.route) { route in
@@ -45,21 +46,19 @@ struct UserListView: View {
           switch route {
           case let .createUser(viewModel): CreateUserView(viewModel: viewModel)
           case let .createAdmin(viewModel): CreateAdminView(viewModel: viewModel)
-          case let .successResponse(viewModel): SuccessView(viewModel: viewModel)
           }
+//          NavigationLink("", isActive: .init(get: { viewModel.successViewModel != nil }, set: { _ in viewModel.successViewModel = nil }), destination: {
+//            if let viewModel = viewModel.successViewModel {
+//              SuccessView(viewModel: viewModel)
+//            }
+//          })
         }
-        .background(nextSuccessNavigation)
+//        .onReceive(viewModel.$successViewModel) {
+//          presentation.wrappedValue.dismiss()
+//        }
       }
   }
-  
-  private var nextSuccessNavigation: some View {
-    NavigationLink("", isActive: .init(get: { viewModel.successViewModel != nil }, set: { _ in viewModel.successViewModel = nil }), destination: {
-      if let viewModel = viewModel.successViewModel {
-        SuccessView(viewModel: viewModel)
-      }
-    })
-  }
-  
+
   private var actionSheet: ActionSheet {
     ActionSheet(title: Text("Select:"), buttons: [
       .default(Text("User"), action: {

@@ -19,28 +19,13 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published private(set) var createdUser: User?
   @Published var successViewModel: SuccessViewModel?
 
-  let successState = PassthroughSubject<Void, Never>()
-
   private var cancellables = Set<AnyCancellable>()
 
   var isValid: Bool {
     !name.isEmpty && !surname.isEmpty
   }
 
-  init() {
-    bind()
-  }
-
   func createUser() {
     createdUser = User(name: name, surname: surname, admin: adminRole)
-  }
-
-  private func bind() {
-    $createdUser
-      .compactMap { $0 }
-      .sink { [weak self] _ in
-        self?.successState.send()
-      }
-      .store(in: &cancellables)
   }
 }
