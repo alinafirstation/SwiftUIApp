@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateAdminView: View {
-  @ObservedObject var viewModel: CreateUserViewModel
+  @ObservedObject private(set) var viewModel: CreateUserViewModel
   @Environment(\.presentationMode) private var presentationMode
 
   var body: some View {

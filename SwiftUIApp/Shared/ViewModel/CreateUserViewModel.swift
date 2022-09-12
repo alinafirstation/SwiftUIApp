@@ -17,8 +17,8 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published var adminRole = ""
 
   @Published private(set) var createdUser: User?
+  @Published private(set) var isDone = false
   @Published var successViewModel: SuccessViewModel?
-  @Published var isDone = false
 
   init() {
     $createdUser

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SuccessView: View {
-  @ObservedObject var viewModel: SuccessViewModel
+  @ObservedObject private(set) var viewModel: SuccessViewModel
 
   var body: some View {
     VStack {
