@@ -9,7 +9,6 @@ import SwiftUI
 
 struct UserListView: View {
   @StateObject private var viewModel = UserListViewModel()
-//  @Environment(\.presentationMode) private var presentation
 
   var body: some View {
     NavigationView {
@@ -47,11 +46,6 @@ struct UserListView: View {
           case let .createUser(viewModel): CreateUserView(viewModel: viewModel)
           case let .createAdmin(viewModel): CreateAdminView(viewModel: viewModel)
           }
-//          NavigationLink("", isActive: .init(get: { viewModel.successViewModel != nil }, set: { _ in viewModel.successViewModel = nil }), destination: {
-//            if let viewModel = viewModel.successViewModel {
-//              SuccessView(viewModel: viewModel)
-//            }
-//          })
         }
       }
   }

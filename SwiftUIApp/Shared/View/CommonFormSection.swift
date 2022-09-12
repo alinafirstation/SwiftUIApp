@@ -27,6 +27,19 @@ struct CommonFormSection: View {
       .opacity(viewModel.isValid ? 1 : 0.2)
       .disabled(!viewModel.isValid)
     }
+    .background(successfulRegistration)
+  }
+
+  private var successfulRegistration: some View {
+    let binding = Binding<Bool>(
+      get: { viewModel.successViewModel != nil },
+      set: { _ in viewModel.successViewModel = nil }
+    )
+    return NavigationLink("", isActive: binding) {
+      if let viewModel = viewModel.successViewModel {
+        SuccessView(viewModel: viewModel)
+      }
+    }
   }
 }
 

@@ -17,6 +17,22 @@ class CreateUserViewModel: ObservableObject, Identifiable {
   @Published var adminRole = ""
 
   @Published private(set) var createdUser: User?
+  @Published var successViewModel: SuccessViewModel?
+  @Published var isFinished = false
+
+  init() {
+    $createdUser
+      .compactMap { $0 }
+      .map { [weak self] _ in
+        guard let self = self else { fatalError() }
+        let viewModel = SuccessViewModel()
+        viewModel.onDoneTapped
+          .map { true }
+          .assign(to: &self.$isFinished)
+        return viewModel
+      }
+      .assign(to: &$successViewModel)
+  }
 
   var isValid: Bool {
     !name.isEmpty && !surname.isEmpty

@@ -9,10 +9,16 @@ import SwiftUI
 
 struct CreateUserView: View {
   @ObservedObject var viewModel: CreateUserViewModel
+  @Environment(\.presentationMode) private var presentationMode
 
   var body: some View {
     Form {
       CommonFormSection(viewModel: viewModel)
+    }
+    .onReceive(viewModel.$isFinished) {
+      guard $0 else { return }
+
+      presentationMode.wrappedValue.dismiss()
     }
     .padding()
     .navigationTitle("User's registration")

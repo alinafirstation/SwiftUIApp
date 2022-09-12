@@ -17,11 +17,10 @@ class UserListViewModel: ObservableObject {
     case createAdmin(CreateUserViewModel)
   }
 
-  @Published private(set) var users = [User(name: "Alina", surname: "Cherepanova")]
-  @Published private(set) var admins = [User(name: "Dima", surname: "Doroshchuk", admin: "Admin")]
+  private(set) var users = [User(name: "Alina", surname: "Cherepanova")]
+  private(set) var admins = [User(name: "Dima", surname: "Doroshchuk", admin: "Admin")]
   @Published var actionSheetOpen = false
   @Published var route: Route?
-  @Published var successViewModel: SuccessViewModel?
 
   private var cancellables = Set<AnyCancellable>()
 
@@ -31,7 +30,6 @@ class UserListViewModel: ObservableObject {
       .compactMap { $0 }
       .sink { [weak self] user in
         self?.users.append(user)
-        self?.makeSuccessViewModel()
       }.store(in: &cancellables)
 
     route = .createUser(viewModel)
@@ -43,19 +41,8 @@ class UserListViewModel: ObservableObject {
       .compactMap { $0 }
       .sink { [weak self] user in
         self?.admins.append(user)
-        self?.makeSuccessViewModel()
       }.store(in: &cancellables)
 
     route = .createAdmin(viewModel)
-  }
-
-  private func makeSuccessViewModel() {
-    let viewModel = SuccessViewModel()
-    viewModel.onDoneTapped
-      .sink { [weak self] in
-        self?.successViewModel = viewModel
-        self?.route = nil
-      }
-      .store(in: &cancellables)
   }
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CreateAdminView: View {
   @ObservedObject var viewModel: CreateUserViewModel
+  @Environment(\.presentationMode) private var presentationMode
 
   var body: some View {
     Form {
@@ -16,6 +17,11 @@ struct CreateAdminView: View {
         TextField("Admin", text: $viewModel.adminRole)
       }
       CommonFormSection(viewModel: viewModel)
+    }
+    .onReceive(viewModel.$isFinished) {
+      guard $0 else { return }
+
+      presentationMode.wrappedValue.dismiss()
     }
     .padding()
     .navigationTitle("Admin's registration")
