@@ -18,17 +18,17 @@ class CreateUserViewModel: ObservableObject, Identifiable {
 
   @Published private(set) var createdUser: User?
   @Published var successViewModel: SuccessViewModel?
-  @Published var isFinished = false
+  @Published var isDone = false
 
   init() {
     $createdUser
       .compactMap { $0 }
       .map { [weak self] _ in
-        guard let self = self else { fatalError() }
+        guard let self = self else { return nil }
         let viewModel = SuccessViewModel()
         viewModel.onDoneTapped
           .map { true }
-          .assign(to: &self.$isFinished)
+          .assign(to: &self.$isDone)
         return viewModel
       }
       .assign(to: &$successViewModel)

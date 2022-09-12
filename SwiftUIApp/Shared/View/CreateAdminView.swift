@@ -18,7 +18,7 @@ struct CreateAdminView: View {
       }
       CommonFormSection(viewModel: viewModel)
     }
-    .onReceive(viewModel.$isFinished) {
+    .onReceive(viewModel.$isDone) {
       guard $0 else { return }
 
       presentationMode.wrappedValue.dismiss()
